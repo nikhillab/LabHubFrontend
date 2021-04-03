@@ -12,7 +12,7 @@ class Login extends Component {
       loginFailMsg: "",
     };
   }
-  render() {
+  render() { 
     return (
       <div>
         <section id='contact' className='contact'>
