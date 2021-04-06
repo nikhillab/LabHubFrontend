@@ -1,6 +1,22 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import AssignmentService from "../api/AssignmentService";
+import AssignmentList from "./AssignmentList";
+
 const Welcome = (props) => {
+  
+  const [fileAssignment, setFileAssignment] = useState([]);
+
+  const retriveFileAssignment = () => {
+    console.log("called retriveFileAssignment");
+    AssignmentService.getFileAssignments()
+      .then((response) => {
+          setFileAssignment(response.data);
+      })
+      .catch((error) => {});
+  };
+
+
   return (
     <div className='container'>
       <section id='services' className='services'>
@@ -13,66 +29,26 @@ const Welcome = (props) => {
           <h2>Assignments</h2>
           <p>All your assignments </p>
         </div>
+        <section id='portfolio' className='portfolio'>
+          <div className='container'></div>
+          <div className='row' data-aos='fade-up' data-aos-delay='200'>
+            <div className='col-lg-12 d-flex justify-content-center'>
+              <ul id='portfolio-flters'>
+                <li>Files</li>
+                <li onClick={retriveFileAssignment}>Text</li>
+              </ul>
+            </div>
+          </div>
+        </section>
         <div className='row'>
-          <div className='col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0'>
-            <div className='icon-box' data-aos='fade-up' data-aos-delay='100'>
-              <div className='icon'>
-                <i className='bx bxl-dribbble'></i>
-              </div>
-              <h4 className='title'>
-                <a href=''>Lorem Ipsum</a>
-              </h4>
-              <p className='description'>
-                Voluptatum deleniti atque corrupti quos dolores et quas
-                molestias excepturi
-              </p>
-            </div>
-          </div>
-
-          <div className='col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0'>
-            <div className='icon-box' data-aos='fade-up' data-aos-delay='200'>
-              <div className='icon'>
-                <i className='bx bx-file'></i>
-              </div>
-              <h4 className='title'>
-                <a href=''>Sed ut perspiciatis</a>
-              </h4>
-              <p className='description'>
-                Duis aute irure dolor in reprehenderit in voluptate velit esse
-                cillum dolore
-              </p>
-            </div>
-          </div>
-
-          <div className='col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0'>
-            <div className='icon-box' data-aos='fade-up' data-aos-delay='300'>
-              <div className='icon'>
-                <i className='bx bx-tachometer'></i>
-              </div>
-              <h4 className='title'>
-                <a href=''>Magni Dolores</a>
-              </h4>
-              <p className='description'>
-                Excepteur sint occaecat cupidatat non proident, sunt in culpa
-                qui officia
-              </p>
-            </div>
-          </div>
-
-          <div className='col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0'>
-            <div className='icon-box' data-aos='fade-up' data-aos-delay='400'>
-              <div className='icon'>
-                <i className='bx bx-world'></i>
-              </div>
-              <h4 className='title'>
-                <a href=''>Nemo Enim</a>
-              </h4>
-              <p className='description'>
-                At vero eos et accusamus et iusto odio dignissimos ducimus qui
-                blanditiis
-              </p>
-            </div>
-          </div>
+          {fileAssignment.map((assignment) => {
+            return (
+              <AssignmentList
+                assignment={assignment}
+                key={assignment.assignentTextId}
+              />
+            );
+          })}
         </div>
       </section>
     </div>

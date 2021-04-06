@@ -13,6 +13,7 @@ import AboutUs from "./Nav/AboutUs";
 import Welcome from "./Core/Welcome";
 import Team from "./Nav/Team";
 import Upload from "./Core/Upload";
+import Assignment from "./Core/Assignment";
 
 const LabHubComponent = (props) => {
   return (
@@ -27,6 +28,7 @@ const LabHubComponent = (props) => {
             <Route path='/contact' component={Contact} />
             <Route path='/team' component={Team} />
             <AuthenticatedRoute path='/welcome/:name' component={Welcome} />
+            <AuthenticatedRoute path='/assignment/:id' component={Assignment} />
             <AuthenticatedRoute path='/upload' component={Upload} />
             <AuthenticatedRoute path='/logout' component={LogoutComponent} />
 
