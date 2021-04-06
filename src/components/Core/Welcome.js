@@ -1,11 +1,22 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import AssignmentService from "../api/AssignmentService";
 import AssignmentList from "./AssignmentList";
 
 const Welcome = (props) => {
   
+  const [textAssignment, setTextAssignment] = useState([]);
   const [fileAssignment, setFileAssignment] = useState([]);
+
+
+  const retriveTextAssignment = () => {
+    console.log("called retriveTextAssignment");
+    AssignmentService.getTextAssignments()
+      .then((response) => {
+          setTextAssignment(response.data);
+      })
+      .catch((error) => {});
+  };
 
   const retriveFileAssignment = () => {
     console.log("called retriveFileAssignment");
@@ -34,14 +45,14 @@ const Welcome = (props) => {
           <div className='row' data-aos='fade-up' data-aos-delay='200'>
             <div className='col-lg-12 d-flex justify-content-center'>
               <ul id='portfolio-flters'>
-                <li>Files</li>
-                <li onClick={retriveFileAssignment}>Text</li>
+                <li onClick={retriveFileAssignment}>Files</li>
+                <li onClick={retriveTextAssignment}>Text</li>
               </ul>
             </div>
           </div>
         </section>
         <div className='row'>
-          {fileAssignment.map((assignment) => {
+          {textAssignment.map((assignment) => {
             return (
               <AssignmentList
                 assignment={assignment}

@@ -12,6 +12,7 @@ export default class Upload extends Component {
     code: null,
     errorMessage: "",
     error: false,
+    fileData: null,
   };
 
   render() {
@@ -203,7 +204,7 @@ export default class Upload extends Component {
   };
 
   //Handel the submit btn and send data to server
-  submitHandler = (event) => {
+  submitHandler = async (event) => {
     const submitType = event.target.name;
     if (!this.validateForm(submitType)) {
       console.log("some error");
@@ -217,45 +218,70 @@ export default class Upload extends Component {
       error: false,
     });
     //get the valid object and send it to server
-    //for file upload take special care 
-    const data=this.getValidObject(submitType)
-    console.log(data)
-    AssignmentService.createFileAssignment(data)
-
+    if (submitType === "textbtn") {
+      const data = await this.getValidObject(submitType);
+      console.log(data);
+      AssignmentService.createTextAssignment(data)
+        .then((res) => console.log(res))
+        .catch((err) => console.log(err));
+    }
+    //for file upload take special care
+    if (submitType === "filebtn") {
+      const data = await this.getValidObject(submitType);
+      //console.log(data);
+      AssignmentService.createFileAssignment(data)
+        .then((res) => console.log(res.data))
+        .catch((err) => console.log(err));
+    }
   };
 
   //return the type of object to send to the server to save
-  getValidObject = (submitType) => {
-
+  getValidObject = async (submitType) => {
     if (submitType === "textbtn") {
-      const data ={
-        name:this.state.name,
-        description:this.state.description,
-        targetDate:this.state.date,
-        code:this.state.code
+      const data = {
+        name: this.state.name,
+        description: this.state.description,
+        targetDate: this.state.date,
+        code: this.state.code,
+      };
+      return data;
+    } else if (submitType === "filebtn") {
+      const sucess = await this.uploadFile();
+      if (!sucess) {
+        console.log("Something went wrong while uploading file");
+        return;
       }
+      const data = {
+        name: this.state.name,
+        description: this.state.description,
+        targetDate: this.state.date,
+        fileResponse: this.state.fileDate,
+      };
       return data;
     }
-    else if (submitType === "filebtn"){
-      const data ={
-        name:this.state.name,
-        description:this.state.description,
-        targetDate:this.state.date,
-        fileResponse:this.state.file.name
-      }
-      return data;
+  };
+
+  uploadFile = async() => {
+    let sucess = true;
+    try {
+      console.log(this.state.file)
+      const formData = new FormData();
+      formData.append("file", this.state.file);
+      const response = await AssignmentService.uploadFile(formData);
+      console.log(response);
+      this.setState({
+        fileDate:response.data
+      })
+    } catch (err) {
+      alert(err.message);
+      sucess = false;
     }
+    console.log(this.state.fileDate)
+    return sucess;
   };
 
   //To validate the form data
   validateForm = (submitType) => {
-    /**
-    name: null,
-    date: null,
-    description: null,
-    file: null,
-    code: null,
-     */
     const data = { ...this.state };
     if (submitType === "textbtn") {
       if (
