@@ -4,29 +4,34 @@ import AssignmentService from "../api/AssignmentService";
 import AssignmentList from "./AssignmentList";
 
 const Welcome = (props) => {
-  
   const [textAssignment, setTextAssignment] = useState([]);
   const [fileAssignment, setFileAssignment] = useState([]);
-
+  const [showAssignments, setshowAssignments] = useState([false, false]);
+  const [error, setError] = useState([false, "No Error"]);
 
   const retriveTextAssignment = () => {
     console.log("called retriveTextAssignment");
     AssignmentService.getTextAssignments()
       .then((response) => {
-          setTextAssignment(response.data);
+        setTextAssignment(response.data);
+        setshowAssignments([true, false]);
       })
-      .catch((error) => {});
+      .catch((error) => {
+        setError([true, error.message]);
+      });
   };
 
   const retriveFileAssignment = () => {
     console.log("called retriveFileAssignment");
     AssignmentService.getFileAssignments()
       .then((response) => {
-          setFileAssignment(response.data);
+        setFileAssignment(response.data);
+        setshowAssignments([false, true]);
       })
-      .catch((error) => {});
+      .catch((error) => {
+        setError([true, error.message]);
+      });
   };
-
 
   return (
     <div className='container'>
@@ -41,6 +46,7 @@ const Welcome = (props) => {
           <p>All your assignments </p>
         </div>
         <section id='portfolio' className='portfolio'>
+          {error[0] && <p className='alert alert-warning center'>{error[1]}</p>}
           <div className='container'></div>
           <div className='row' data-aos='fade-up' data-aos-delay='200'>
             <div className='col-lg-12 d-flex justify-content-center'>
@@ -52,14 +58,24 @@ const Welcome = (props) => {
           </div>
         </section>
         <div className='row'>
-          {textAssignment.map((assignment) => {
-            return (
-              <AssignmentList
-                assignment={assignment}
-                key={assignment.assignentTextId}
-              />
-            );
-          })}
+          {showAssignments[0] &&
+            textAssignment.map((assignment) => {
+              return (
+                <AssignmentList
+                  assignment={assignment}
+                  key={assignment.assignentTextId}
+                />
+              );
+            })}
+            {showAssignments[1] &&
+            fileAssignment.map((assignment) => {
+              return (
+                <AssignmentList
+                  assignment={assignment}
+                  key={assignment.assignentTextId}
+                />
+              );
+            })}
         </div>
       </section>
     </div>

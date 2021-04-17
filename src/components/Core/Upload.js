@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import moment from "moment";
 import AssignmentService from "../api/AssignmentService";
+import Anime from './assets/animation.gif'
 
 export default class Upload extends Component {
   state = {
@@ -13,6 +14,7 @@ export default class Upload extends Component {
     errorMessage: "",
     error: false,
     fileData: null,
+    uplodingState: false,
   };
 
   render() {
@@ -26,16 +28,86 @@ export default class Upload extends Component {
             {this.state.error && (
               <p className='alert alert-warning'>{this.state.errorMessage} </p>
             )}
-            <div className='row'>
-              <div
-                className='col-lg-6 col-md-6'
-                onClick={() => this.toggalType(0)}>
+
+            {!this.state.uplodingState ? (
+              <div className='row'>
                 <div
-                  className='box'
-                  data-aos='zoom-in-right'
-                  data-aos-delay='200'>
-                  <h4>File</h4>
-                  <div>
+                  className='col-lg-6 col-md-6'
+                  onClick={() => this.toggalType(0)}>
+                  <div
+                    className='box'
+                    data-aos='zoom-in-right'
+                    data-aos-delay='200'>
+                    <h4>File</h4>
+                    <div>
+                      <div className='form-group mt-3'>
+                        <input
+                          type='text'
+                          name='name'
+                          className='form-control '
+                          placeholder='Enter Assignment Name'
+                          required
+                          disabled={this.state.disabled[0]}
+                          onClick={() => this.toggalType(0)}
+                          onChange={this.fileHandler}
+                        />
+                      </div>
+                      <div className='form-group  mt-3'>
+                        <label className='form-label'>Choose Last Date </label>
+
+                        <input
+                          type='date'
+                          className='form-control'
+                          name='date'
+                          required
+                          disabled={this.state.disabled[0]}
+                          onChange={this.fileHandler}
+                        />
+                      </div>
+                      <div className='form-group mt-3'>
+                        <input
+                          type='text'
+                          className='form-control '
+                          name='description'
+                          placeholder='Description About Assignment'
+                          required
+                          disabled={this.state.disabled[0]}
+                          onChange={this.fileHandler}
+                        />
+                      </div>
+                      <div className='form-group mt-3'>
+                        <label className='form-label'>Select File</label>
+
+                        <input
+                          type='file'
+                          className='form-control '
+                          required
+                          name='file'
+                          disabled={this.state.disabled[0]}
+                          onChange={this.fileHandler}
+                        />
+                      </div>
+                    </div>
+                    <div className='btn-wrap'>
+                      <button
+                        name='filebtn'
+                        className='btn-buy'
+                        onClick={this.submitHandler}>
+                        Upload
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/**
+                 * Text uploader Controller from hear
+                 */}
+
+                <div
+                  className='col-lg-6 col-md-6 mt-4 mt-md-0'
+                  onClick={() => this.toggalType(1)}>
+                  <div className='box' data-aos='zoom-in' data-aos-delay='100'>
+                    <h4>Text</h4>
                     <div className='form-group mt-3'>
                       <input
                         type='text'
@@ -43,21 +115,20 @@ export default class Upload extends Component {
                         className='form-control '
                         placeholder='Enter Assignment Name'
                         required
-                        disabled={this.state.disabled[0]}
-                        onClick={() => this.toggalType(0)}
-                        onChange={this.fileHandler}
+                        disabled={this.state.disabled[1]}
+                        onClick={() => this.toggalType(1)}
+                        onChange={this.textChangeHandler}
                       />
                     </div>
-                    <div className='form-group  mt-3'>
+                    <div className='form-group mt-3'>
                       <label className='form-label'>Choose Last Date </label>
-
                       <input
                         type='date'
-                        className='form-control'
+                        className='form-control '
                         name='date'
                         required
-                        disabled={this.state.disabled[0]}
-                        onChange={this.fileHandler}
+                        disabled={this.state.disabled[1]}
+                        onChange={this.textChangeHandler}
                       />
                     </div>
                     <div className='form-group mt-3'>
@@ -67,98 +138,42 @@ export default class Upload extends Component {
                         name='description'
                         placeholder='Description About Assignment'
                         required
-                        disabled={this.state.disabled[0]}
-                        onChange={this.fileHandler}
+                        disabled={this.state.disabled[1]}
+                        onChange={this.textChangeHandler}
                       />
                     </div>
                     <div className='form-group mt-3'>
-                      <label className='form-label'>Select File</label>
-
-                      <input
-                        type='file'
+                      <textarea
                         className='form-control '
+                        name='code'
+                        rows='4'
+                        placeholder='Enter Your Code Here'
                         required
-                        name='file'
-                        disabled={this.state.disabled[0]}
-                        onChange={this.fileHandler}
-                      />
+                        disabled={this.state.disabled[1]}
+                        onChange={this.textChangeHandler}></textarea>
+                    </div>
+                    <div className='btn-wrap'>
+                      <button
+                        name='textbtn'
+                        className='btn-buy'
+                        onClick={this.submitHandler}>
+                        Upload
+                      </button>
                     </div>
                   </div>
-                  <div className='btn-wrap'>
-                    <button
-                      name='filebtn'
-                      className='btn-buy'
-                      onClick={this.submitHandler}>
-                      Upload
-                    </button>
-                  </div>
                 </div>
               </div>
-
-              {/**
-               * Text uploader Controller from hear
-               */}
-
-              <div
-                className='col-lg-6 col-md-6 mt-4 mt-md-0'
-                onClick={() => this.toggalType(1)}>
-                <div className='box' data-aos='zoom-in' data-aos-delay='100'>
-                  <h4>Text</h4>
-                  <div className='form-group mt-3'>
-                    <input
-                      type='text'
-                      name='name'
-                      className='form-control '
-                      placeholder='Enter Assignment Name'
-                      required
-                      disabled={this.state.disabled[1]}
-                      onClick={() => this.toggalType(1)}
-                      onChange={this.textChangeHandler}
-                    />
-                  </div>
-                  <div className='form-group mt-3'>
-                    <label className='form-label'>Choose Last Date </label>
-                    <input
-                      type='date'
-                      className='form-control '
-                      name='date'
-                      required
-                      disabled={this.state.disabled[1]}
-                      onChange={this.textChangeHandler}
-                    />
-                  </div>
-                  <div className='form-group mt-3'>
-                    <input
-                      type='text'
-                      className='form-control '
-                      name='description'
-                      placeholder='Description About Assignment'
-                      required
-                      disabled={this.state.disabled[1]}
-                      onChange={this.textChangeHandler}
-                    />
-                  </div>
-                  <div className='form-group mt-3'>
-                    <textarea
-                      className='form-control '
-                      name='code'
-                      rows='4'
-                      placeholder='Enter Your Code Here'
-                      required
-                      disabled={this.state.disabled[1]}
-                      onChange={this.textChangeHandler}></textarea>
-                  </div>
-                  <div className='btn-wrap'>
-                    <button
-                      name='textbtn'
-                      className='btn-buy'
-                      onClick={this.submitHandler}>
-                      Upload
-                    </button>
-                  </div>
-                </div>
+            ) : (
+              <div className="container text-center">
+                <img
+                src={Anime}
+                height="250"
+                width="250"
+                className='img-fluid animated '
+                alt='animation.gif'
+              />
               </div>
-            </div>
+            )}
           </div>
         </section>
       </div>
@@ -261,22 +276,29 @@ export default class Upload extends Component {
     }
   };
 
-  uploadFile = async() => {
+  uploadFile = async () => {
     let sucess = true;
     try {
-      console.log(this.state.file)
+      console.log(this.state.file);
       const formData = new FormData();
       formData.append("file", this.state.file);
+      this.setState({
+        uplodingState: true,
+      });
       const response = await AssignmentService.uploadFile(formData);
       console.log(response);
       this.setState({
-        fileDate:response.data
-      })
+        fileDate: response.data,
+        uplodingState: false
+      });
     } catch (err) {
       alert(err.message);
       sucess = false;
+      this.setState({
+        uplodingState: false,
+      });
     }
-    console.log(this.state.fileDate)
+    console.log(this.state.fileDate);
     return sucess;
   };
 

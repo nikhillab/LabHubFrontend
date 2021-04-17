@@ -2,7 +2,7 @@ import React from "react";
 
  const Assignment=(props)=> {
 
-   console.log(props.match.params.id)
+  //  console.log(props.match.params.id)
   
   return (
     <section id='testimonials' className='testimonials section-bg'>
