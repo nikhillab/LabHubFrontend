@@ -15,8 +15,11 @@ const Welcome = (props) => {
       .then((response) => {
         setTextAssignment(response.data);
         setshowAssignments([true, false]);
+        setError([false, ""]);
       })
       .catch((error) => {
+        console.log(error)
+
         setError([true, error.message]);
       });
   };
@@ -25,10 +28,14 @@ const Welcome = (props) => {
     console.log("called retriveFileAssignment");
     AssignmentService.getFileAssignments()
       .then((response) => {
+        //console.log(response.data)
         setFileAssignment(response.data);
         setshowAssignments([false, true]);
+        setError([false, ""]);
       })
       .catch((error) => {
+        console.log(error)
+
         setError([true, error.message]);
       });
   };
@@ -45,7 +52,10 @@ const Welcome = (props) => {
           <h2>Assignments</h2>
           <p>All your assignments </p>
         </div>
-        <section id='portfolio' className='portfolio'>
+        <section
+          id='portfolio'
+          className='portfolio'
+          style={{ "paddingTop": "0px", "paddingBottom": "5px" }}>
           {error[0] && <p className='alert alert-warning center'>{error[1]}</p>}
           <div className='container'></div>
           <div className='row' data-aos='fade-up' data-aos-delay='200'>
@@ -63,16 +73,18 @@ const Welcome = (props) => {
               return (
                 <AssignmentList
                   assignment={assignment}
-                  key={assignment.assignentTextId}
+                  type={"text"}
+                  key={assignment.assignmentTextId}
                 />
               );
             })}
-            {showAssignments[1] &&
+          {showAssignments[1] &&
             fileAssignment.map((assignment) => {
               return (
                 <AssignmentList
                   assignment={assignment}
-                  key={assignment.assignentTextId}
+                  type={"file"}
+                  key={assignment.assignmentFileId}
                 />
               );
             })}

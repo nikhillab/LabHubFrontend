@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import moment from "moment";
 import AssignmentService from "../api/AssignmentService";
-import Anime from './assets/animation.gif'
+import AuthenticationService from "../Authancitation/AuthenticationService"
+import Anime from "./assets/animation.gif";
 
 export default class Upload extends Component {
   state = {
@@ -15,6 +16,7 @@ export default class Upload extends Component {
     error: false,
     fileData: null,
     uplodingState: false,
+    userName: null,
   };
 
   render() {
@@ -164,14 +166,14 @@ export default class Upload extends Component {
                 </div>
               </div>
             ) : (
-              <div className="container text-center">
+              <div className='container text-center'>
                 <img
-                src={Anime}
-                height="250"
-                width="250"
-                className='img-fluid animated '
-                alt='animation.gif'
-              />
+                  src={Anime}
+                  height='250'
+                  width='250'
+                  className='img-fluid animated '
+                  alt='animation.gif'
+                />
               </div>
             )}
           </div>
@@ -232,21 +234,50 @@ export default class Upload extends Component {
     this.setState({
       error: false,
     });
+
     //get the valid object and send it to server
     if (submitType === "textbtn") {
       const data = await this.getValidObject(submitType);
-      console.log(data);
+      //console.log(data);
       AssignmentService.createTextAssignment(data)
-        .then((res) => console.log(res))
-        .catch((err) => console.log(err));
+        .then((res) => {
+          this.setState({
+            error: false,
+          });
+          console.log(res);
+          this.props.history.push(
+            `/assignment/text/${res.data.assignmentTextId}`
+          );
+        })
+        .catch((err) => {
+          console.log(err);
+          this.setState({
+            error: true,
+            errorMessage: err.message,
+          });
+        });
     }
     //for file upload take special care
     if (submitType === "filebtn") {
       const data = await this.getValidObject(submitType);
-      //console.log(data);
+
       AssignmentService.createFileAssignment(data)
-        .then((res) => console.log(res.data))
-        .catch((err) => console.log(err));
+        .then((res) => {
+          console.log(res.data);
+          this.setState({
+            error: false,
+          });
+          this.props.history.push(
+            `/assignment/file/${res.data.assignmentFileId}`
+          );
+        })
+        .catch((err) => {
+          console.log(err);
+          this.setState({
+            error: true,
+            errorMessage: err.message,
+          });
+        });
     }
   };
 
@@ -258,38 +289,42 @@ export default class Upload extends Component {
         description: this.state.description,
         targetDate: this.state.date,
         code: this.state.code,
+        userName:AuthenticationService.getLoggedInUser()
       };
+      console.log(data)
       return data;
     } else if (submitType === "filebtn") {
       const sucess = await this.uploadFile();
       if (!sucess) {
-        console.log("Something went wrong while uploading file");
-        return;
+        alert("Something went wrong while uploading file");
+        return null;
       }
       const data = {
         name: this.state.name,
         description: this.state.description,
         targetDate: this.state.date,
         fileResponse: this.state.fileDate,
+        userName: AuthenticationService.getLoggedInUser()
       };
       return data;
     }
   };
 
+  // Upload file and save the response to the state
   uploadFile = async () => {
     let sucess = true;
     try {
-      console.log(this.state.file);
+      //console.log(this.state.file);
       const formData = new FormData();
       formData.append("file", this.state.file);
       this.setState({
         uplodingState: true,
       });
       const response = await AssignmentService.uploadFile(formData);
-      console.log(response);
+      //console.log(response);
       this.setState({
         fileDate: response.data,
-        uplodingState: false
+        uplodingState: false,
       });
     } catch (err) {
       alert(err.message);
@@ -298,7 +333,7 @@ export default class Upload extends Component {
         uplodingState: false,
       });
     }
-    console.log(this.state.fileDate);
+    //console.log(this.state.fileDate);
     return sucess;
   };
 

@@ -3,15 +3,33 @@ class AssignmentService {
   getTextAssignments() {
     return axios.get("http://localhost:8080/getTextAssignments");
   }
-  getFileAssignments() {
-    return axios.get("http://localhost:8080/getFileAssignments");
+  getTextAssignmentById(id) {
+    return axios.get(`http://localhost:8080/getTextAssignment/${id}`);
   }
 
   createTextAssignment(data) {
     return axios.post("http://localhost:8080/createText", data);
   }
+
+  deleteTextAssignment(id) {
+    return axios.delete(`http://localhost:8080/deleteText/${id}`);
+  }
+
+  //-----------------------------------------------------------------------------------
+  getFileAssignments() {
+    return axios.get("http://localhost:8080/getFileAssignments");
+  }
+
   createFileAssignment(data) {
     return axios.post("http://localhost:8080/createFile", data);
+  }
+
+  getFileAssignmentById(id) {
+    return axios.get(`http://localhost:8080/getFileAssignment/${id}`);
+  }
+
+  deleteFileAssignment(id) {
+    return axios.delete(`http://localhost:8080/deleteFile/${id}`);
   }
 
   uploadFile(formData) {
@@ -21,7 +39,6 @@ class AssignmentService {
           (progressEvent.loaded * 100) / progressEvent.total
         );
         console.log(percentCompleted);
-       
       },
     });
   }

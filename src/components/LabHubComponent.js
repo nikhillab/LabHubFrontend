@@ -28,7 +28,7 @@ const LabHubComponent = (props) => {
             <Route path='/contact' component={Contact} />
             <Route path='/team' component={Team} />
             <AuthenticatedRoute path='/welcome/:name' component={Welcome} />
-            <AuthenticatedRoute path='/assignment/:id' component={Assignment} />
+            <AuthenticatedRoute path='/assignment/:type/:id' component={Assignment} />
             <AuthenticatedRoute path='/upload' component={Upload} />
             <AuthenticatedRoute path='/logout' component={LogoutComponent} />
 

@@ -12,7 +12,7 @@ class Login extends Component {
       loginFailMsg: "",
     };
   }
-  render() { 
+  render() {
     return (
       <div>
         <section id='contact' className='contact'>
@@ -22,6 +22,12 @@ class Login extends Component {
             </div>
 
             <div className='row ms-5'>
+              {this.state.loginFail && (
+                <div className='alert alert-warning'>
+                  {this.state.loginFailMsg}
+                </div>
+              )}
+
               <div
                 className='col-lg-5 col-md-12'
                 data-aos='fade-up'
@@ -48,14 +54,6 @@ class Login extends Component {
                       onChange={this.handelChange}
                       required
                     />
-                  </div>
-
-                  <div className='my-3'>
-                    <div className='loading'>Loading</div>
-                    <div className='error-message'></div>
-                    <div className='sent-message'>
-                      Your message has been sent. Thank you!
-                    </div>
                   </div>
                   <div className='text-center'>
                     <button type='submit' onClick={this.loginClicked}>
@@ -86,11 +84,24 @@ class Login extends Component {
         loginFailMsg: "Please Enter Valid UserName and Password",
       });
     } else {
-      AuthenticationService.registerSuccessfullLogin(
+      AuthenticationService.executeBasicAuthenticationService(
         this.state.username,
         this.state.password
-      );
-      this.props.history.push(`/welcome/${this.state.username}`);
+      )
+        .then(() => {
+          AuthenticationService.registerSuccessfullLogin(
+            this.state.username,
+            this.state.password
+          );
+          this.props.history.push(`/welcome/${this.state.username}`);
+        })
+        .catch((error) => {
+          console.log("fail to login in");
+          this.setState({
+            loginFail: true,
+            loginFailMsg: "Please Enter Valid UserName and Password",
+          });
+        });
     }
   };
 }

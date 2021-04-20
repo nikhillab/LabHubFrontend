@@ -934,7 +934,7 @@ section {
 # Portfolio
 --------------------------------------------------------------*/
 .portfolio .portfolio-item {
-  margin-bottom: 30px;
+  margin-bottom: 10px;
 }
 
 .portfolio #portfolio-flters {
@@ -948,8 +948,8 @@ section {
   cursor: pointer;
   display: inline-block;
   padding: 8px 15px 10px 15px;
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 20px;
+  font-weight: 700;
   line-height: 1;
   text-transform: uppercase;
   color: #222222;
@@ -1056,7 +1056,7 @@ section {
 # Portfolio Details
 --------------------------------------------------------------*/
 .portfolio-details {
-  padding-top: 40px;
+  padding-top: 20px;
 }
 
 .portfolio-details .portfolio-details-slider img {

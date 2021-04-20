@@ -31,12 +31,6 @@ const Header = (props) => {
                 </Link>
               </li>
               <li>
-                <Link className='nav-link scrollto' to='/services'>
-                  Services
-                </Link>
-              </li>
-
-              <li>
                 <Link className='nav-link scrollto' to='/team'>
                   Team
                 </Link>
