@@ -1,7 +1,8 @@
 import axios from "axios";
 class AssignmentService {
-  getTextAssignments() {
-    return axios.get("http://localhost:8080/getTextAssignments");
+  getTextAssignments(user) {
+    console.log(user);
+    return axios.get("http://localhost:8080/getTextAssignments/" + user);
   }
   getTextAssignmentById(id) {
     return axios.get(`http://localhost:8080/getTextAssignment/${id}`);
@@ -16,8 +17,8 @@ class AssignmentService {
   }
 
   //-----------------------------------------------------------------------------------
-  getFileAssignments() {
-    return axios.get("http://localhost:8080/getFileAssignments");
+  getFileAssignments(user) {
+    return axios.get("http://localhost:8080/getFileAssignments/" + user);
   }
 
   createFileAssignment(data) {

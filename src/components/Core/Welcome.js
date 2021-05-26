@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import AssignmentService from "../api/AssignmentService";
 import AssignmentList from "./AssignmentList";
+import AuthenticationService from '../Authancitation/AuthenticationService' 
 
 const Welcome = (props) => {
   const [textAssignment, setTextAssignment] = useState([]);
@@ -11,7 +12,7 @@ const Welcome = (props) => {
 
   const retriveTextAssignment = () => {
     console.log("called retriveTextAssignment");
-    AssignmentService.getTextAssignments()
+    AssignmentService.getTextAssignments(AuthenticationService.getLoggedInUser())
       .then((response) => {
         setTextAssignment(response.data);
         setshowAssignments([true, false]);
@@ -26,7 +27,7 @@ const Welcome = (props) => {
 
   const retriveFileAssignment = () => {
     console.log("called retriveFileAssignment");
-    AssignmentService.getFileAssignments()
+    AssignmentService.getFileAssignments(AuthenticationService.getLoggedInUser())
       .then((response) => {
         //console.log(response.data)
         setFileAssignment(response.data);
